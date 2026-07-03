@@ -1,0 +1,27 @@
+# variables.yaml
+# Constants used across the ble_audio.robot test suite.
+# Each variable is documented: name (type) - meaning.
+
+# DEVICE_NAME (str) - name of the mocked BLE Audio device used in pairing tests
+DEVICE_NAME: "Limes Inferior"
+
+# SECONDARY_DEVICE_NAME (str) - name of the second device used in the multi-device switching scenario
+SECONDARY_DEVICE_NAME: "TV Streamer Sim"
+
+# INVALID_DEVICE_NAME (str) - name of an incompatible device used in the negative pairing scenario
+INVALID_DEVICE_NAME: "Unknown BLE Device"
+
+# RECONNECT_TIMEOUT_SEC (int) - maximum time in seconds the device should attempt to reconnect after signal loss
+RECONNECT_TIMEOUT_SEC: 5
+
+# RECONNECT_TIMEOUT_EXCEEDED_SEC (int) - simulated signal-loss duration, deliberately longer than RECONNECT_TIMEOUT_SEC, used in the negative timeout scenario
+RECONNECT_TIMEOUT_EXCEEDED_SEC: 8
+
+# LOW_BATTERY_THRESHOLD_PERCENT (int) - battery percentage threshold below which the device enters power-save mode
+LOW_BATTERY_THRESHOLD_PERCENT: 10
+
+# LOW_BATTERY_LEVEL_PERCENT (int) - simulated battery level used in the low-battery fallback test, below LOW_BATTERY_THRESHOLD_PERCENT
+LOW_BATTERY_LEVEL_PERCENT: 7
+
+# FULL_BATTERY_LEVEL_PERCENT (int) - simulated battery level used as the starting point in most tests
+FULL_BATTERY_LEVEL_PERCENT: 85

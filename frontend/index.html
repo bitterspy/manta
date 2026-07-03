@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Manta — Live Test Automation Demo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-row">
+      <div class="brand">Manta</div>
+      <nav class="tabs">
+        <button class="tab-button active" data-tab="demo">Demo</button>
+        <button class="tab-button" data-tab="code">Code</button>
+      </nav>
+      <a class="github-link" href="https://github.com/bitterspy/manta" target="_blank" rel="noopener">
+        View on GitHub
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="tab-demo" class="tab-panel active">
+      <h1>Live Test Automation Demo</h1>
+      <p class="disclaimer">
+        This is a mock/simulation project inspired by a Test Automation Engineer
+        (Connectivity Verification) role. It does <strong>not</strong> test any
+        real hardware — all BLE Audio behavior is simulated in software.
+      </p>
+
+      <div class="run-panel">
+        <button id="run-button" class="run-button">&#9654; Run Tests</button>
+        <span id="run-status" class="run-status"></span>
+      </div>
+
+      <pre id="live-log" class="live-log" aria-live="polite"></pre>
+
+      <div id="report-link-wrap" class="report-link-wrap hidden">
+        <a id="report-link" class="report-link" href="#" target="_blank" rel="noopener">
+          Open generated report &rarr;
+        </a>
+      </div>
+    </section>
+
+    <section id="tab-code" class="tab-panel">
+      <h1>Test Suite Source</h1>
+      <div class="code-layout">
+        <ul class="file-list">
+          <li><button class="file-button active" data-file="ble_audio.robot">ble_audio.robot</button></li>
+          <li><button class="file-button" data-file="ble_keywords.robot">resources/keywords/ble_keywords.robot</button></li>
+          <li><button class="file-button" data-file="BluetoothMockLibrary.py">resources/libraries/BluetoothMockLibrary.py</button></li>
+          <li><button class="file-button" data-file="variables.yaml">resources/variables/variables.yaml</button></li>
+        </ul>
+        <pre id="code-view" class="code-view"><code id="code-content">Select a file.</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      Demo by Wojciech Spycha&#322;a &middot;
+      <a href="https://github.com/bitterspy/manta" target="_blank" rel="noopener">github.com/bitterspy/manta</a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

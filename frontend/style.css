@@ -1,0 +1,257 @@
+/* Manta — Demant brand palette (#1E425A, Pantone 7477 C) with a neutral,
+   professional supporting palette. */
+
+:root {
+  --brand: #1e425a;
+  --brand-dark: #142c3d;
+  --bg: #f5f7f9;
+  --surface: #ffffff;
+  --text: #1c2226;
+  --text-muted: #5a6672;
+  --border: #dde3e8;
+  --success: #2f8f5b;
+  --error: #b3432b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.site-header {
+  background: var(--brand);
+  color: #fff;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 24px;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.tab-button {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tab-button:hover {
+  color: #fff;
+}
+
+.tab-button.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.github-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.github-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+main.container {
+  padding-top: 32px;
+  padding-bottom: 48px;
+  min-height: 60vh;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+h1 {
+  color: var(--brand);
+  margin-top: 0;
+}
+
+.disclaimer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--brand);
+  padding: 12px 16px;
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.run-panel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0 16px;
+}
+
+.run-button {
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.run-button:hover {
+  background: var(--brand-dark);
+}
+
+.run-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.run-status {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.run-status.error {
+  color: var(--error);
+}
+
+.run-status.success {
+  color: var(--success);
+}
+
+.live-log {
+  background: #0f171d;
+  color: #d7e3ea;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  padding: 16px;
+  border-radius: 8px;
+  min-height: 280px;
+  max-height: 480px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.report-link-wrap {
+  margin-top: 16px;
+}
+
+.report-link-wrap.hidden {
+  display: none;
+}
+
+.report-link {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.report-link:hover {
+  text-decoration: underline;
+}
+
+.code-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 16px;
+}
+
+.file-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.file-button {
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.file-button:hover {
+  border-color: var(--brand);
+}
+
+.file-button.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.code-view {
+  background: #0f171d;
+  color: #d7e3ea;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.85rem;
+  padding: 16px;
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 600px;
+  margin: 0;
+}
+
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 20px 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.site-footer a {
+  color: var(--brand);
+}
+
+@media (max-width: 700px) {
+  .header-row {
+    flex-wrap: wrap;
+  }
+  .code-layout {
+    grid-template-columns: 1fr;
+  }
+}
