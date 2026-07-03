@@ -183,9 +183,9 @@ h1 {
 }
 
 .last-report {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -194,11 +194,17 @@ h1 {
   margin: 10px 0;
 }
 
+.last-report #last-report-link {
+  grid-column: 2;
+  justify-self: center;
+}
+
 .last-report.hidden {
   display: none;
 }
 
 .last-report-label {
+  grid-column: 1;
   font-size: 0.85rem;
   color: var(--text-muted);
 }
