@@ -123,17 +123,17 @@ body {
 
 .demo-tooltip {
   position: absolute;
-  top: calc(100% + 14px);
+  top: calc(100% + 7px);
   left: 50%;
   transform: translateX(-50%);
-  background: #ffce3d;
-  color: #3a2c00;
-  font-size: 1.6rem;
+  background: var(--brand-dark);
+  color: #fff;
+  font-size: 0.8rem;
   font-weight: 700;
-  padding: 12px 24px;
-  border-radius: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
   white-space: nowrap;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.3);
   animation: tooltip-bounce 1.4s ease-in-out infinite;
   z-index: 20;
 }
@@ -144,8 +144,8 @@ body {
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border: 12px solid transparent;
-  border-bottom-color: #ffce3d;
+  border: 6px solid transparent;
+  border-bottom-color: var(--brand-dark);
 }
 
 .demo-tooltip.hidden {
