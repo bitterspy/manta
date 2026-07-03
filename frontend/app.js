@@ -6,20 +6,52 @@
   const tabButtons = document.querySelectorAll('.tab-button');
   const tabPanels = document.querySelectorAll('.tab-panel');
 
+  function activateTab(tabName) {
+    const button = document.querySelector(`.tab-button[data-tab="${tabName}"]`);
+    if (!button) return;
+    tabButtons.forEach((b) => b.classList.remove('active'));
+    tabPanels.forEach((p) => p.classList.remove('active'));
+    button.classList.add('active');
+    button.classList.remove('tab-button-pulse');
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+  }
+
   tabButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      tabButtons.forEach((b) => b.classList.remove('active'));
-      tabPanels.forEach((p) => p.classList.remove('active'));
-      button.classList.add('active');
-      button.classList.remove('tab-button-pulse');
-      document.getElementById(`tab-${button.dataset.tab}`).classList.add('active');
-    });
+    button.addEventListener('click', () => activateTab(button.dataset.tab));
   });
+
+  // On a visitor's very first visit, auto-advance from the CV to the live
+  // demo after a few seconds, with a brief fade, so the demo (the more
+  // interesting part) doesn't go unnoticed. Only happens once per browser,
+  // and any click cancels it so it never interrupts someone reading the CV.
+  (() => {
+    const FIRST_VISIT_KEY = 'manta-visited';
+    if (localStorage.getItem(FIRST_VISIT_KEY)) return;
+    localStorage.setItem(FIRST_VISIT_KEY, '1');
+
+    const cvPanel = document.getElementById('tab-cv');
+    let cancelled = false;
+    const cancel = () => { cancelled = true; };
+    document.addEventListener('click', cancel, { once: true });
+
+    setTimeout(() => {
+      if (cancelled) return;
+      cvPanel.classList.add('fading-out');
+      setTimeout(() => {
+        if (cancelled) return;
+        activateTab('demo');
+        cvPanel.classList.remove('fading-out');
+      }, 500);
+    }, 3000);
+  })();
 
   const suiteList = document.getElementById('suite-list');
   const liveLog = document.getElementById('live-log');
   const liveLogOutput = document.getElementById('live-log-output');
   const liveLogInput = document.getElementById('live-log-input');
+  const lastReport = document.getElementById('last-report');
+  const lastReportLabel = document.getElementById('last-report-label');
+  const lastReportLink = document.getElementById('last-report-link');
 
   const PROMPT = 'manta@demo:~$';
 
@@ -57,18 +89,17 @@
     statusEl.innerHTML = `<span class="suite-status-track">${LIVE_DEMO_TEXT.repeat(3)}</span>`;
   }
 
-  function hideAllReportButtons() {
-    document.querySelectorAll('.report-button').forEach((button) => {
-      button.classList.add('hidden');
-    });
+  function hideLastReport() {
+    lastReport.classList.add('hidden');
   }
 
-  function showReportButton(suiteId, reportUrl, passed) {
-    const reportButton = document.querySelector(`.report-button[data-suite="${suiteId}"]`);
-    if (!reportButton) return;
-    reportButton.href = reportUrl;
-    reportButton.classList.remove('hidden', 'success', 'error');
-    reportButton.classList.add(passed ? 'success' : 'error');
+  function showLastReport(suiteId, reportUrl, passed) {
+    const suite = suites.find((s) => s.id === suiteId);
+    lastReportLabel.textContent = suite ? suite.label : suiteId;
+    lastReportLink.href = reportUrl;
+    lastReportLink.classList.remove('success', 'error');
+    lastReportLink.classList.add(passed ? 'success' : 'error');
+    lastReport.classList.remove('hidden');
   }
 
   async function loadSuites() {
@@ -86,7 +117,6 @@
         </div>
         <div class="suite-actions">
           <button class="run-button" data-suite="${suite.id}">&#9654; Run</button>
-          <a class="report-button hidden" data-suite="${suite.id}" href="#" target="_blank" rel="noopener">Report &rarr;</a>
         </div>
       `;
       suiteList.appendChild(card);
@@ -127,7 +157,7 @@
         inputBuffer = '';
         liveLogInput.textContent = '';
         liveLogOutput.textContent = `${PROMPT} ${command}\n`;
-        hideAllReportButtons();
+        hideLastReport();
         setAllButtonsDisabled(true);
         setSuiteRunning(message.suiteId);
       }
@@ -147,7 +177,7 @@
           setSuiteStatus(message.suiteId, 'Run failed to complete.', 'error');
         }
         if (message.reportUrl) {
-          showReportButton(message.suiteId, message.reportUrl, message.exitCode === 0);
+          showLastReport(message.suiteId, message.reportUrl, message.exitCode === 0);
         }
         inputLocked = false;
         printMenu();

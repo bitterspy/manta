@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Manta — Live Test Automation Demo</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%F0%9F%90%9F%3C/text%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="style.css?v=17" />
+  <link rel="stylesheet" href="style.css?v=18" />
 </head>
 <body>
   <div class="bg-scene" aria-hidden="true"></div>
@@ -35,6 +35,11 @@
         Engineer role. It does <strong>not</strong> test any real hardware —
         all BLE Audio behavior is simulated in software.
       </p>
+
+      <div id="last-report" class="last-report hidden">
+        <span id="last-report-label" class="last-report-label"></span>
+        <a id="last-report-link" class="report-button" href="#" target="_blank" rel="noopener">Report &rarr;</a>
+      </div>
 
       <div id="suite-list" class="suite-list">
         <!-- Suite cards injected by app.js -->
@@ -233,6 +238,6 @@
     </div>
   </footer>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
