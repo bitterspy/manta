@@ -39,7 +39,7 @@ app.use(express.static(FRONTEND_DIR));
 app.use('/logs', express.static(LOGS_DIR));
 
 // Simple per-IP cooldown to prevent spamming the public Run buttons.
-const RATE_LIMIT_MS = 30 * 1000;
+const RATE_LIMIT_MS = 20 * 1000;
 const lastRunByIp = new Map();
 
 app.get('/api/suites', (req, res) => {
