@@ -42,7 +42,7 @@
         activateTab('demo');
         cvPanel.classList.remove('fading-out');
       }, 500);
-    }, 3000);
+    }, 10000);
   })();
 
   const suiteList = document.getElementById('suite-list');
