@@ -1,6 +1,7 @@
 // runner.js
-// Handles spawning the Robot Framework process, broadcasting its output to
-// connected WebSocket clients, and enforcing the single-run lock + timeout.
+// Handles spawning the Robot Framework process for a chosen suite,
+// broadcasting its output to connected WebSocket clients, and enforcing
+// the single-run lock + timeout.
 
 const { spawn } = require('child_process');
 const path = require('path');
@@ -8,8 +9,24 @@ const fs = require('fs');
 
 const SUITE_DIR = path.join(__dirname, '..', 'robotframeworktests', 'tests');
 const LOGS_DIR = path.join(__dirname, '..', 'Logs');
-const SUITE_FILE = path.join(SUITE_DIR, 'ble_audio.robot');
 const PROCESS_TIMEOUT_MS = 90 * 1000;
+
+// Whitelisted suites that can be triggered from the public "Run" buttons —
+// never build a path from unchecked user input.
+const SUITES = {
+  'ble_audio': {
+    label: 'BLE Audio Connectivity',
+    file: path.join(SUITE_DIR, 'ble_audio.robot')
+  },
+  'connectivity_negative': {
+    label: 'Connectivity Negative Paths',
+    file: path.join(SUITE_DIR, 'connectivity_negative.robot')
+  },
+  'performance_regression': {
+    label: 'Performance & Regression',
+    file: path.join(SUITE_DIR, 'performance_regression.robot')
+  }
+};
 
 // Robot Framework is installed in a project-local virtualenv (created with
 // `python3 -m venv venv`) rather than system-wide, since the server's
@@ -37,17 +54,37 @@ function broadcast(message) {
   }
 }
 
-function runTests() {
+function listSuites() {
+  return Object.entries(SUITES).map(([id, suite]) => ({ id, label: suite.label }));
+}
+
+function runSuite(suiteId) {
   if (isRunning) {
     return { started: false, reason: 'A test run is already in progress.' };
   }
 
-  isRunning = true;
-  broadcast({ type: 'start' });
+  const suite = SUITES[suiteId];
+  if (!suite) {
+    return { started: false, reason: 'Unknown test suite.' };
+  }
 
+  isRunning = true;
+  broadcast({ type: 'start', suiteId, label: suite.label });
+
+  // --console verbose prints each keyword as it executes, with indentation
+  // showing the nesting level, instead of just a dot/PASS per test case.
+  // --loglevel DEBUG raises the detail captured in the generated log.html.
   const child = spawn(
     ROBOT_BIN,
-    ['--outputdir', LOGS_DIR, SUITE_FILE],
+    [
+      '--outputdir', LOGS_DIR,
+      '--output', `output-${suiteId}.xml`,
+      '--log', `log-${suiteId}.html`,
+      '--report', `report-${suiteId}.html`,
+      '--console', 'verbose',
+      '--loglevel', 'DEBUG',
+      suite.file
+    ],
     { cwd: SUITE_DIR }
   );
 
@@ -70,8 +107,8 @@ function runTests() {
     broadcast({
       type: 'done',
       exitCode: code,
-      reportUrl: '/logs/report.html',
-      logUrl: '/logs/log.html'
+      reportUrl: `/logs/report-${suiteId}.html`,
+      logUrl: `/logs/log-${suiteId}.html`
     });
   });
 
@@ -85,4 +122,4 @@ function runTests() {
   return { started: true };
 }
 
-module.exports = { runTests, registerClient, isRunning: () => isRunning };
+module.exports = { runSuite, listSuites, registerClient, isRunning: () => isRunning };

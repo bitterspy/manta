@@ -2,14 +2,15 @@
 // Express + WebSocket server for the Manta live demo.
 // Serves the static frontend, the generated Robot Framework reports (Logs/),
 // a whitelisted view of the test source files, and the /api/run endpoint
-// that triggers a Robot Framework run and streams its output live.
+// that triggers a Robot Framework run (for a chosen suite) and streams its
+// output live.
 
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const http = require('http');
 const WebSocket = require('ws');
-const { runTests, registerClient, isRunning } = require('./runner');
+const { runSuite, listSuites, registerClient, isRunning } = require('./runner');
 
 const PORT = process.env.PORT || 44591;
 const FRONTEND_DIR = path.join(__dirname, '..', 'frontend');
@@ -21,6 +22,8 @@ const RF_RESOURCES_DIR = path.join(__dirname, '..', 'robotframeworktests', 'reso
 // arbitrary path from user input.
 const SOURCE_FILES = {
   'ble_audio.robot': path.join(RF_TESTS_DIR, 'ble_audio.robot'),
+  'connectivity_negative.robot': path.join(RF_TESTS_DIR, 'connectivity_negative.robot'),
+  'performance_regression.robot': path.join(RF_TESTS_DIR, 'performance_regression.robot'),
   'ble_keywords.robot': path.join(RF_RESOURCES_DIR, 'keywords', 'ble_keywords.robot'),
   'BluetoothMockLibrary.py': path.join(RF_RESOURCES_DIR, 'libraries', 'BluetoothMockLibrary.py'),
   'variables.yaml': path.join(RF_RESOURCES_DIR, 'variables', 'variables.yaml')
@@ -31,11 +34,15 @@ const app = express();
 app.use(express.static(FRONTEND_DIR));
 app.use('/logs', express.static(LOGS_DIR));
 
-// Simple per-IP cooldown to prevent spamming the public Run button.
+// Simple per-IP cooldown to prevent spamming the public Run buttons.
 const RATE_LIMIT_MS = 30 * 1000;
 const lastRunByIp = new Map();
 
-app.post('/api/run', (req, res) => {
+app.get('/api/suites', (req, res) => {
+  res.json(listSuites());
+});
+
+app.post('/api/run/:suiteId', (req, res) => {
   const ip = req.ip;
   const now = Date.now();
   const lastRun = lastRunByIp.get(ip) || 0;
@@ -50,7 +57,7 @@ app.post('/api/run', (req, res) => {
   }
 
   lastRunByIp.set(ip, now);
-  const result = runTests();
+  const result = runSuite(req.params.suiteId);
   res.json(result);
 });
 

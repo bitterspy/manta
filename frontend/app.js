@@ -1,6 +1,6 @@
 // app.js
-// Handles tab switching, the WebSocket live log stream, the Run button,
-// and fetching source files for the Code tab.
+// Handles tab switching, the WebSocket live log stream, per-suite Run
+// buttons, and fetching source files for the Code tab.
 
 (() => {
   const tabButtons = document.querySelectorAll('.tab-button');
@@ -15,15 +15,61 @@
     });
   });
 
-  const runButton = document.getElementById('run-button');
-  const runStatus = document.getElementById('run-status');
+  const suiteList = document.getElementById('suite-list');
   const liveLog = document.getElementById('live-log');
   const reportLinkWrap = document.getElementById('report-link-wrap');
   const reportLink = document.getElementById('report-link');
 
-  function setStatus(text, kind) {
-    runStatus.textContent = text;
-    runStatus.className = 'run-status' + (kind ? ` ${kind}` : '');
+  let runButtons = [];
+
+  function setAllButtonsDisabled(disabled) {
+    runButtons.forEach((button) => {
+      button.disabled = disabled;
+    });
+  }
+
+  function setSuiteStatus(suiteId, text, kind) {
+    const statusEl = document.querySelector(`.suite-status[data-suite="${suiteId}"]`);
+    if (!statusEl) return;
+    statusEl.textContent = text;
+    statusEl.className = 'suite-status' + (kind ? ` ${kind}` : '');
+  }
+
+  async function loadSuites() {
+    const res = await fetch('/api/suites');
+    const suites = await res.json();
+
+    suiteList.innerHTML = '';
+    suites.forEach((suite) => {
+      const card = document.createElement('div');
+      card.className = 'suite-card';
+      card.innerHTML = `
+        <div class="suite-info">
+          <div class="suite-label">${suite.label}</div>
+          <span class="suite-status" data-suite="${suite.id}"></span>
+        </div>
+        <button class="run-button" data-suite="${suite.id}">&#9654; Run</button>
+      `;
+      suiteList.appendChild(card);
+    });
+
+    runButtons = Array.from(document.querySelectorAll('.run-button'));
+    runButtons.forEach((button) => {
+      button.addEventListener('click', () => startRun(button.dataset.suite));
+    });
+  }
+
+  async function startRun(suiteId) {
+    setSuiteStatus(suiteId, 'Starting...', '');
+    try {
+      const res = await fetch(`/api/run/${encodeURIComponent(suiteId)}`, { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) {
+        setSuiteStatus(suiteId, data.error || 'Could not start run.', 'error');
+      }
+    } catch (err) {
+      setSuiteStatus(suiteId, 'Network error while starting run.', 'error');
+    }
   }
 
   function connectWebSocket() {
@@ -36,8 +82,8 @@
       if (message.type === 'start') {
         liveLog.textContent = '';
         reportLinkWrap.classList.add('hidden');
-        runButton.disabled = true;
-        setStatus('Running...', '');
+        setAllButtonsDisabled(true);
+        setSuiteStatus(message.suiteId, 'Running...', '');
       }
 
       if (message.type === 'line') {
@@ -46,15 +92,7 @@
       }
 
       if (message.type === 'done') {
-        runButton.disabled = false;
-        if (message.exitCode === 0 || message.exitCode === 1) {
-          // Robot Framework returns the number of failed tests as the exit
-          // code, so 0 = all passed, >0 = some failed but the run itself
-          // completed successfully.
-          setStatus('Run finished.', 'success');
-        } else {
-          setStatus('Run failed to complete.', 'error');
-        }
+        setAllButtonsDisabled(false);
         if (message.reportUrl) {
           reportLink.href = message.reportUrl;
           reportLinkWrap.classList.remove('hidden');
@@ -68,19 +106,7 @@
   }
 
   connectWebSocket();
-
-  runButton.addEventListener('click', async () => {
-    setStatus('Starting...', '');
-    try {
-      const res = await fetch('/api/run', { method: 'POST' });
-      const data = await res.json();
-      if (!res.ok) {
-        setStatus(data.error || 'Could not start run.', 'error');
-      }
-    } catch (err) {
-      setStatus('Network error while starting run.', 'error');
-    }
-  });
+  loadSuites();
 
   const fileButtons = document.querySelectorAll('.file-button');
   const codeContent = document.getElementById('code-content');

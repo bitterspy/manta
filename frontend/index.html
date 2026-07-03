@@ -7,9 +7,67 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="bg-scene" aria-hidden="true">
+    <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="35%" r="70%">
+          <stop offset="0%" stop-color="#2a5c7d" stop-opacity="0.55" />
+          <stop offset="100%" stop-color="#0f171d" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="earGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#3a6f8f" />
+          <stop offset="100%" stop-color="#1e425a" />
+        </linearGradient>
+      </defs>
+
+      <rect width="1600" height="900" fill="url(#glow)" />
+
+      <!-- Surreal robotic ear -->
+      <g transform="translate(260,180)" opacity="0.5">
+        <path d="M120 0
+                 C40 10, -20 90, 10 180
+                 C 30 250, 90 300, 90 380
+                 C 90 440, 40 460, 40 520
+                 C 40 580, 100 610, 150 580"
+              fill="none" stroke="url(#earGrad)" stroke-width="14" stroke-linecap="round" />
+        <circle cx="150" cy="580" r="10" fill="#3a6f8f" />
+        <circle cx="60" cy="120" r="6" fill="#88b4c9" />
+        <circle cx="30" cy="220" r="4" fill="#88b4c9" />
+        <path d="M100 40 L160 20 M110 90 L175 75 M95 150 L165 145"
+              stroke="#88b4c9" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+      </g>
+
+      <!-- Sound waves -->
+      <g transform="translate(520,320)" stroke="#4a86a8" stroke-width="3" fill="none" opacity="0.45">
+        <path d="M0 0 Q 40 -40 80 0 Q 120 40 160 0" />
+        <path d="M0 60 Q 40 20 80 60 Q 120 100 160 60" />
+        <path d="M0 -60 Q 40 -100 80 -60 Q 120 -20 160 -60" />
+      </g>
+
+      <!-- Floating mock hearing-aid capsule -->
+      <g transform="translate(1080,470)" opacity="0.55">
+        <ellipse cx="0" cy="0" rx="70" ry="34" fill="none" stroke="#88b4c9" stroke-width="6" />
+        <circle cx="-70" cy="0" r="8" fill="#88b4c9" />
+        <path d="M60 -10 C 130 -30, 160 20, 120 60" fill="none" stroke="#88b4c9" stroke-width="6" stroke-linecap="round" />
+        <circle cx="120" cy="60" r="6" fill="#4a86a8" />
+      </g>
+
+      <!-- Circuit-like connective lines -->
+      <g stroke="#2f5771" stroke-width="2" fill="none" opacity="0.4">
+        <path d="M0 700 L 300 700 L 340 660 L 600 660" />
+        <path d="M1600 200 L 1300 200 L 1260 240 L 950 240" />
+        <circle cx="340" cy="660" r="5" fill="#2f5771" />
+        <circle cx="1260" cy="240" r="5" fill="#2f5771" />
+      </g>
+    </svg>
+  </div>
+
   <header class="site-header">
     <div class="container header-row">
-      <div class="brand">Manta</div>
+      <div class="brand">
+        Manta
+        <span class="brand-sub">Demo by Wojciech Spycha&#322;a</span>
+      </div>
       <nav class="tabs">
         <button class="tab-button active" data-tab="demo">Demo</button>
         <button class="tab-button" data-tab="code">Code</button>
@@ -24,14 +82,13 @@
     <section id="tab-demo" class="tab-panel active">
       <h1>Live Test Automation Demo</h1>
       <p class="disclaimer">
-        This is a mock/simulation project inspired by a Test Automation Engineer
-        (Connectivity Verification) role. It does <strong>not</strong> test any
-        real hardware — all BLE Audio behavior is simulated in software.
+        This is a mock/simulation project inspired by a Test Automation
+        Engineer role. It does <strong>not</strong> test any real hardware —
+        all BLE Audio behavior is simulated in software.
       </p>
 
-      <div class="run-panel">
-        <button id="run-button" class="run-button">&#9654; Run Tests</button>
-        <span id="run-status" class="run-status"></span>
+      <div id="suite-list" class="suite-list">
+        <!-- Suite cards injected by app.js -->
       </div>
 
       <pre id="live-log" class="live-log" aria-live="polite"></pre>
@@ -48,6 +105,8 @@
       <div class="code-layout">
         <ul class="file-list">
           <li><button class="file-button active" data-file="ble_audio.robot">ble_audio.robot</button></li>
+          <li><button class="file-button" data-file="connectivity_negative.robot">connectivity_negative.robot</button></li>
+          <li><button class="file-button" data-file="performance_regression.robot">performance_regression.robot</button></li>
           <li><button class="file-button" data-file="ble_keywords.robot">resources/keywords/ble_keywords.robot</button></li>
           <li><button class="file-button" data-file="BluetoothMockLibrary.py">resources/libraries/BluetoothMockLibrary.py</button></li>
           <li><button class="file-button" data-file="variables.yaml">resources/variables/variables.yaml</button></li>

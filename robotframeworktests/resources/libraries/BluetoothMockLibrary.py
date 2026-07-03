@@ -11,6 +11,7 @@ delays (time.sleep) exist purely so the live log in the browser reads
 at the pace of a real CI pipeline.
 """
 
+import random
 import time
 from typing import Optional
 
@@ -22,6 +23,23 @@ class BluetoothMockLibrary:
         self.connected_device: Optional[str] = None
         self.battery_level_percent: int = 100
         self.power_save_mode: bool = False
+        self.reconnect_attempts: int = 0
+
+    def randomly_fail(self, fail_chance_percent: int) -> bool:
+        """Randomly reports a failure with the given probability.
+
+        Used deliberately on a couple of otherwise-passing test cases so
+        the live demo occasionally shows a real failing run, like a
+        flaky test in an actual CI pipeline — not a bug in the mock.
+
+        Args:
+            fail_chance_percent: probability (0-100) that this call
+                reports a failure (int).
+
+        Returns:
+            bool: True if this call should simulate a failure.
+        """
+        return random.randint(1, 100) <= fail_chance_percent
 
     def pair_device(self, device_name: str, should_succeed: bool = True) -> str:
         """Simulates the BLE pairing process.
@@ -38,6 +56,28 @@ class BluetoothMockLibrary:
         if not should_succeed:
             self.connected_device = None
             return "PAIRING_FAILED"
+        self.connected_device = device_name
+        return "PAIRED"
+
+    def pair_device_with_battery_check(self, device_name: str, minimum_battery_percent: int) -> str:
+        """Simulates pairing while enforcing a minimum battery level.
+
+        Real hearing-aid-style devices commonly refuse to start a new BLE
+        session below a safety threshold, to avoid dying mid-pairing.
+
+        Args:
+            device_name: name of the device being paired with.
+            minimum_battery_percent: minimum battery percent required to
+                allow pairing (int).
+
+        Returns:
+            str: "PAIRED" if battery is sufficient, "BATTERY_TOO_LOW"
+                otherwise.
+        """
+        time.sleep(1.0)
+        if self.battery_level_percent < minimum_battery_percent:
+            self.connected_device = None
+            return "BATTERY_TOO_LOW"
         self.connected_device = device_name
         return "PAIRED"
 
@@ -75,10 +115,37 @@ class BluetoothMockLibrary:
                 "RECONNECT_TIMEOUT" otherwise.
         """
         time.sleep(min(wait_seconds, 3))
+        self.reconnect_attempts += 1
         if wait_seconds <= timeout_seconds:
             self.connected_device = device_name
             return "RECONNECTED"
         return "RECONNECT_TIMEOUT"
+
+    def get_reconnect_attempts(self) -> int:
+        """Returns how many reconnect attempts have been made so far (int)."""
+        return self.reconnect_attempts
+
+    def simulate_repeated_signal_drops(self, device_name: str, drop_count: int, timeout_seconds: int) -> int:
+        """Simulates several consecutive signal-loss-and-reconnect cycles.
+
+        Used to check that a device keeps recovering reliably under
+        repeated interference, rather than degrading after the first drop.
+
+        Args:
+            device_name: name of the device being reconnected each cycle.
+            drop_count: number of signal-loss cycles to simulate (int).
+            timeout_seconds: reconnect timeout applied on every cycle (int).
+
+        Returns:
+            int: number of cycles that successfully reconnected.
+        """
+        successful_cycles = 0
+        for _ in range(drop_count):
+            self.simulate_signal_loss()
+            result = self.reconnect(device_name, wait_seconds=1, timeout_seconds=timeout_seconds)
+            if result == "RECONNECTED":
+                successful_cycles += 1
+        return successful_cycles
 
     def switch_active_device(self, from_device: str, to_device: str) -> str:
         """Simulates switching the active audio stream to another paired device.
@@ -119,3 +186,22 @@ class BluetoothMockLibrary:
             return "POWER_SAVE_MODE"
         self.power_save_mode = False
         return "NORMAL_MODE"
+
+    def measure_stream_stability(self, sample_count: int) -> int:
+        """Simulates sampling audio stream stability over a short window.
+
+        Each sample represents a health check on the active stream; a
+        connected device is expected to pass every sample.
+
+        Args:
+            sample_count: number of stability samples to take (int).
+
+        Returns:
+            int: number of samples that reported a stable stream.
+        """
+        stable_samples = 0
+        for _ in range(sample_count):
+            time.sleep(0.2)
+            if self.connected_device is not None:
+                stable_samples += 1
+        return stable_samples

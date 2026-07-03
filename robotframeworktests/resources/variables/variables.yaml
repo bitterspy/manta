@@ -25,3 +25,18 @@ LOW_BATTERY_LEVEL_PERCENT: 7
 
 # FULL_BATTERY_LEVEL_PERCENT (int) - simulated battery level used as the starting point in most tests
 FULL_BATTERY_LEVEL_PERCENT: 85
+
+# CRITICAL_BATTERY_LEVEL_PERCENT (int) - simulated battery level too low to safely start a new pairing session
+CRITICAL_BATTERY_LEVEL_PERCENT: 3
+
+# MINIMUM_BATTERY_FOR_PAIRING_PERCENT (int) - minimum battery percent required before pairing is allowed
+MINIMUM_BATTERY_FOR_PAIRING_PERCENT: 15
+
+# SIGNAL_DROP_CYCLES (int) - number of consecutive signal-loss-and-reconnect cycles simulated in the repeated-drop scenario
+SIGNAL_DROP_CYCLES: 3
+
+# STREAM_STABILITY_SAMPLE_COUNT (int) - number of samples taken when checking audio stream stability
+STREAM_STABILITY_SAMPLE_COUNT: 5
+
+# FLAKY_FAIL_CHANCE_PERCENT (int) - probability (0-100) that a test tagged as flaky-eligible randomly fails, to simulate real-world CI flakiness
+FLAKY_FAIL_CHANCE_PERCENT: 20

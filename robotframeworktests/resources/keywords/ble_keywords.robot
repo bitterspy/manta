@@ -79,3 +79,45 @@ Then Device Should Not Be Connected
     [Documentation]    Verifies that no device is currently connected.
     ${connected}=    Get Connected Device
     Should Be Equal    ${connected}    ${NONE}
+
+Given Pairing Is Attempted With Low Battery
+    [Documentation]    Attempts to pair the mocked device while the
+    ...                 battery is below the required minimum.
+    ...                 (negative scenario).
+    [Arguments]    ${device_name}    ${minimum_battery_percent}
+    ${result}=    Pair Device With Battery Check    ${device_name}    ${minimum_battery_percent}
+    RETURN    ${result}
+
+When Signal Drops Repeatedly
+    [Documentation]    Simulates several consecutive signal-loss-and-reconnect
+    ...                 cycles and returns how many cycles recovered
+    ...                 successfully.
+    [Arguments]    ${device_name}    ${drop_count}    ${timeout_seconds}
+    ${successful_cycles}=    Simulate Repeated Signal Drops
+    ...    ${device_name}    ${drop_count}    ${timeout_seconds}
+    RETURN    ${successful_cycles}
+
+Then Reconnect Attempts Should Be
+    [Documentation]    Verifies the total number of reconnect attempts
+    ...                 made so far by the mocked device.
+    [Arguments]    ${expected_attempts}
+    ${attempts}=    Get Reconnect Attempts
+    Should Be Equal As Integers    ${attempts}    ${expected_attempts}
+
+Then Stream Should Stay Stable For Samples
+    [Documentation]    Samples the active stream a given number of times
+    ...                 and verifies every sample reported a stable
+    ...                 connection.
+    [Arguments]    ${sample_count}
+    ${stable_samples}=    Measure Stream Stability    ${sample_count}
+    Should Be Equal As Integers    ${stable_samples}    ${sample_count}
+
+Then This Test May Randomly Fail
+    [Documentation]    Deliberately introduces a small, configurable chance
+    ...                 of failure on an otherwise-passing test, so the
+    ...                 live demo occasionally shows a real failing run —
+    ...                 similar to a flaky test in a real CI pipeline.
+    [Arguments]    ${fail_chance_percent}
+    ${should_fail}=    Randomly Fail    ${fail_chance_percent}
+    Should Not Be True    ${should_fail}
+    ...    msg=Simulated flaky failure (${fail_chance_percent}% chance) — this is expected occasionally, not a bug.

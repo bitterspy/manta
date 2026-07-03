@@ -5,9 +5,11 @@ simulated BLE Audio connectivity scenarios (pairing, reconnect, multi-device
 switching, low-battery fallback) and streams the output to the browser in
 real time, similar to a CI pipeline log.
 
-This project was built as a portfolio demo for a Test Automation Engineer
-(Connectivity Verification) job application. It does **not** test any real
-hardware — all Bluetooth behavior is fully simulated in software.
+This project was built as a portfolio demo showcasing test automation
+skills. It does **not** test any real hardware — all Bluetooth behavior is
+fully simulated in software.
+
+This repository was built with the assistance of AI (Claude).
 
 ## How it works
 
@@ -39,7 +41,9 @@ Manta/
 ├── frontend/            Static site (Demo / Code tabs)
 ├── robotframeworktests/
 │   ├── tests/
-│   │   └── ble_audio.robot              Test suite
+│   │   ├── ble_audio.robot                  Core connectivity suite
+│   │   ├── connectivity_negative.robot      Negative-path suite
+│   │   └── performance_regression.robot     Performance/regression suite
 │   └── resources/
 │       ├── keywords/ble_keywords.robot  High-level keywords
 │       ├── libraries/BluetoothMockLibrary.py  Mock BLE device

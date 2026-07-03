@@ -1,4 +1,4 @@
-/* Manta — Demant brand palette (#1E425A, Pantone 7477 C) with a neutral,
+/* Manta — a deep navy palette (#1E425A) with a neutral,
    professional supporting palette. */
 
 :root {
@@ -23,6 +23,20 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
+  position: relative;
+}
+
+.bg-scene {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: #0f171d;
+}
+
+.bg-scene svg {
+  width: 100%;
+  height: 100%;
 }
 
 .container {
@@ -32,8 +46,11 @@ body {
 }
 
 .site-header {
-  background: var(--brand);
+  background: rgba(30, 66, 90, 0.92);
+  backdrop-filter: blur(6px);
   color: #fff;
+  position: relative;
+  z-index: 1;
 }
 
 .header-row {
@@ -47,6 +64,16 @@ body {
   font-weight: 700;
   font-size: 1.25rem;
   letter-spacing: 0.02em;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brand-sub {
+  font-weight: 400;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .tabs {
@@ -91,6 +118,17 @@ main.container {
   padding-top: 32px;
   padding-bottom: 48px;
   min-height: 60vh;
+  position: relative;
+  z-index: 1;
+}
+
+main.container::before {
+  content: "";
+  position: absolute;
+  inset: -16px -24px;
+  background: rgba(245, 247, 249, 0.9);
+  border-radius: 12px;
+  z-index: -1;
 }
 
 .tab-panel {
@@ -116,21 +154,57 @@ h1 {
   font-size: 0.95rem;
 }
 
-.run-panel {
+.suite-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 24px 0 16px;
+}
+
+.suite-card {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
-  margin: 24px 0 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.suite-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.suite-label {
+  font-weight: 600;
+}
+
+.suite-status {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  min-height: 1.1em;
+}
+
+.suite-status.error {
+  color: var(--error);
+}
+
+.suite-status.success {
+  color: var(--success);
 }
 
 .run-button {
   background: var(--brand);
   color: #fff;
   border: none;
-  padding: 12px 24px;
-  font-size: 1rem;
+  padding: 10px 20px;
+  font-size: 0.95rem;
   border-radius: 6px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .run-button:hover {
@@ -140,19 +214,6 @@ h1 {
 .run-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.run-status {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.run-status.error {
-  color: var(--error);
-}
-
-.run-status.success {
-  color: var(--success);
 }
 
 .live-log {
@@ -241,6 +302,10 @@ h1 {
   padding: 20px 0;
   color: var(--text-muted);
   font-size: 0.85rem;
+  position: relative;
+  z-index: 1;
+  background: rgba(245, 247, 249, 0.92);
+  backdrop-filter: blur(4px);
 }
 
 .site-footer a {
