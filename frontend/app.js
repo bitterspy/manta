@@ -20,29 +20,21 @@
     button.addEventListener('click', () => activateTab(button.dataset.tab));
   });
 
-  // On a visitor's very first visit, auto-advance from the CV to the live
-  // demo after a few seconds, with a brief fade, so the demo (the more
-  // interesting part) doesn't go unnoticed. Only happens once per browser,
-  // and any click cancels it so it never interrupts someone reading the CV.
+  // On a visitor's very first visit, show a small tooltip pointing at the
+  // Demo tab to invite a click, instead of auto-advancing away from the
+  // CV. Disappears on the first click anywhere, and never shows again on
+  // later visits.
   (() => {
     const FIRST_VISIT_KEY = 'manta-visited';
     if (localStorage.getItem(FIRST_VISIT_KEY)) return;
     localStorage.setItem(FIRST_VISIT_KEY, '1');
 
-    const cvPanel = document.getElementById('tab-cv');
-    let cancelled = false;
-    const cancel = () => { cancelled = true; };
-    document.addEventListener('click', cancel, { once: true });
+    const tooltip = document.getElementById('demo-tooltip');
+    if (!tooltip) return;
+    tooltip.classList.remove('hidden');
 
-    setTimeout(() => {
-      if (cancelled) return;
-      cvPanel.classList.add('fading-out');
-      setTimeout(() => {
-        if (cancelled) return;
-        activateTab('demo');
-        cvPanel.classList.remove('fading-out');
-      }, 500);
-    }, 10000);
+    const dismiss = () => tooltip.classList.add('hidden');
+    document.addEventListener('click', dismiss, { once: true });
   })();
 
   const suiteList = document.getElementById('suite-list');

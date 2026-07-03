@@ -116,6 +116,51 @@ body {
   }
 }
 
+.tab-button-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.demo-tooltip {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffce3d;
+  color: #3a2c00;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  animation: tooltip-bounce 1.4s ease-in-out infinite;
+  z-index: 5;
+}
+
+.demo-tooltip::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: #ffce3d;
+}
+
+.demo-tooltip.hidden {
+  display: none;
+}
+
+@keyframes tooltip-bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-4px);
+  }
+}
+
 .github-link {
   color: #fff;
   text-decoration: none;
@@ -151,19 +196,6 @@ main.container::before {
 
 .tab-panel.active {
   display: block;
-}
-
-.tab-panel.fading-out {
-  animation: tab-fade-out 0.5s ease forwards;
-}
-
-@keyframes tab-fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
 }
 
 h1 {
