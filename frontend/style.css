@@ -123,17 +123,17 @@ body {
 
 .demo-tooltip {
   position: absolute;
-  top: calc(100% + 10px);
+  top: calc(100% + 14px);
   left: 50%;
   transform: translateX(-50%);
   background: #ffce3d;
   color: #3a2c00;
-  font-size: 0.8rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 12px 24px;
+  border-radius: 12px;
   white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
   animation: tooltip-bounce 1.4s ease-in-out infinite;
   z-index: 5;
 }
@@ -144,7 +144,7 @@ body {
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  border: 6px solid transparent;
+  border: 12px solid transparent;
   border-bottom-color: #ffce3d;
 }
 
@@ -208,10 +208,11 @@ h1 {
   background: var(--surface);
   border: 1px solid var(--border);
   border-left: 4px solid var(--brand);
-  padding: 6px 12px;
+  padding: 10px 16px;
   border-radius: 4px;
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .last-report {
