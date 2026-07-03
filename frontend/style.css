@@ -549,7 +549,7 @@ h1 {
 .cv-tag-leveled {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 3px;
   padding: 4px 10px;
   border-radius: 999px;
@@ -558,10 +558,11 @@ h1 {
 .cv-skill-bars {
   display: flex;
   gap: 2px;
+  width: 100%;
 }
 
 .cv-skill-bar {
-  width: 6px;
+  flex: 1;
   height: 3px;
   border-radius: 1px;
   background: var(--border);
