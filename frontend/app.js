@@ -19,7 +19,8 @@
   const liveLog = document.getElementById('live-log');
   const reportLinkWrap = document.getElementById('report-link-wrap');
   const reportLink = document.getElementById('report-link');
-  const liveMarquee = document.getElementById('live-marquee');
+
+  const LIVE_DEMO_TEXT = '&#9679; LIVE DEMO — real Robot Framework tests running on a simulated device &#9679; ';
 
   let runButtons = [];
 
@@ -34,6 +35,13 @@
     if (!statusEl) return;
     statusEl.textContent = text;
     statusEl.className = 'suite-status' + (kind ? ` ${kind}` : '');
+  }
+
+  function setSuiteRunning(suiteId) {
+    const statusEl = document.querySelector(`.suite-status[data-suite="${suiteId}"]`);
+    if (!statusEl) return;
+    statusEl.className = 'suite-status running';
+    statusEl.innerHTML = `<span class="suite-status-track">${LIVE_DEMO_TEXT.repeat(3)}</span>`;
   }
 
   async function loadSuites() {
@@ -84,8 +92,7 @@
         liveLog.textContent = '';
         reportLinkWrap.classList.add('hidden');
         setAllButtonsDisabled(true);
-        setSuiteStatus(message.suiteId, 'Running...', '');
-        liveMarquee.classList.remove('hidden');
+        setSuiteRunning(message.suiteId);
       }
 
       if (message.type === 'line') {
@@ -95,7 +102,6 @@
 
       if (message.type === 'done') {
         setAllButtonsDisabled(false);
-        liveMarquee.classList.add('hidden');
         if (message.exitCode === 0) {
           setSuiteStatus(message.suiteId, 'All tests passed.', 'success');
         } else if (message.exitCode > 0) {
