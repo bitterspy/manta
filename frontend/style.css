@@ -398,21 +398,144 @@ h1 {
   cursor: default;
 }
 
-.cv-actions {
-  margin: 14px 0;
+.cv-sheet {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 32px;
+  max-width: 780px;
+  margin: 0 auto;
 }
 
-.cv-actions .run-button {
+.cv-header {
+  border-bottom: 2px solid var(--brand);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.cv-name {
+  color: var(--brand);
+  margin: 0 0 2px;
+  font-size: 1.7rem;
+}
+
+.cv-headline {
+  margin: 0 0 8px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.cv-contact {
+  margin: 0 0 14px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cv-contact a {
+  color: var(--brand);
+}
+
+.cv-download {
   display: inline-block;
   text-decoration: none;
 }
 
-.cv-viewer {
-  width: 100%;
-  height: 75vh;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
+.cv-section {
+  margin-bottom: 22px;
+}
+
+.cv-section h2 {
+  color: var(--brand);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+  margin: 0 0 10px;
+}
+
+.cv-section p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.cv-skills {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 6px 12px;
+  font-size: 0.88rem;
+}
+
+.cv-skills dt {
+  font-weight: 600;
+}
+
+.cv-skills dd {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.cv-entry {
+  margin-bottom: 16px;
+}
+
+.cv-entry:last-child {
+  margin-bottom: 0;
+}
+
+.cv-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.cv-entry-title {
+  font-weight: 700;
+}
+
+.cv-entry-subtitle {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+}
+
+.cv-entry-meta {
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.cv-entry ul {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.cv-plain-list {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .cv-sheet {
+    padding: 20px;
+  }
+  .cv-skills {
+    grid-template-columns: 1fr;
+  }
+  .cv-entry-header {
+    flex-direction: column;
+  }
+  .cv-entry-meta {
+    text-align: left;
+  }
 }
 
 .site-footer {
