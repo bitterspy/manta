@@ -183,16 +183,17 @@ h1 {
 
 .suite-list {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 12px;
   margin: 24px 0 16px;
 }
 
 .suite-card {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1 1 220px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -232,6 +233,7 @@ h1 {
   border-radius: 6px;
   cursor: pointer;
   white-space: nowrap;
+  width: 100%;
 }
 
 .run-button:hover {
@@ -345,5 +347,8 @@ h1 {
   }
   .code-layout {
     grid-template-columns: 1fr;
+  }
+  .suite-card {
+    flex: 1 1 100%;
   }
 }
