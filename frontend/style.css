@@ -142,9 +142,8 @@ body {
 }
 
 main.container {
-  padding-top: 32px;
-  padding-bottom: 48px;
-  min-height: 60vh;
+  padding-top: 20px;
+  padding-bottom: 28px;
   position: relative;
   z-index: 1;
 }
@@ -168,24 +167,25 @@ main.container::before {
 
 h1 {
   color: var(--brand);
-  margin-top: 0;
+  margin: 0 0 10px;
+  font-size: 1.4rem;
 }
 
 .disclaimer {
   background: var(--surface);
   border: 1px solid var(--border);
   border-left: 4px solid var(--brand);
-  padding: 12px 16px;
+  padding: 8px 14px;
   border-radius: 4px;
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 .suite-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin: 24px 0 16px;
+  gap: 10px;
+  margin: 14px 0 12px;
 }
 
 .suite-card {
@@ -249,11 +249,11 @@ h1 {
   background: #0f171d;
   color: #d7e3ea;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-  font-size: 0.85rem;
-  padding: 16px;
+  font-size: 0.8rem;
+  padding: 12px;
   border-radius: 8px;
-  min-height: 280px;
-  max-height: 480px;
+  min-height: 200px;
+  max-height: 320px;
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;

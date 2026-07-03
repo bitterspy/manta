@@ -9,6 +9,7 @@ const fs = require('fs');
 
 const SUITE_DIR = path.join(__dirname, '..', 'robotframeworktests', 'tests');
 const LOGS_DIR = path.join(__dirname, '..', 'Logs');
+const LISTENER_FILE = path.join(__dirname, '..', 'robotframeworktests', 'libraries', 'LiveConsoleListener.py');
 const PROCESS_TIMEOUT_MS = 90 * 1000;
 
 // Whitelisted suites that can be triggered from the public "Run" buttons —
@@ -71,9 +72,11 @@ function runSuite(suiteId) {
   isRunning = true;
   broadcast({ type: 'start', suiteId, label: suite.label });
 
-  // --console verbose prints each keyword as it executes, with indentation
-  // showing the nesting level, instead of just a dot/PASS per test case.
-  // --loglevel DEBUG raises the detail captured in the generated log.html.
+  // Robot Framework's own --console verbose only prints a summary per test
+  // case, not per keyword. LiveConsoleListener hooks into the real
+  // start_keyword/end_keyword execution events and prints each one as it
+  // happens, which is what actually drives the live, step-by-step feel of
+  // the demo. --loglevel DEBUG raises the detail captured in log.html too.
   const child = spawn(
     ROBOT_BIN,
     [
@@ -81,6 +84,7 @@ function runSuite(suiteId) {
       '--output', `output-${suiteId}.xml`,
       '--log', `log-${suiteId}.html`,
       '--report', `report-${suiteId}.html`,
+      '--listener', LISTENER_FILE,
       '--console', 'verbose',
       '--loglevel', 'DEBUG',
       suite.file
@@ -106,6 +110,7 @@ function runSuite(suiteId) {
     isRunning = false;
     broadcast({
       type: 'done',
+      suiteId,
       exitCode: code,
       reportUrl: `/logs/report-${suiteId}.html`,
       logUrl: `/logs/log-${suiteId}.html`
@@ -116,7 +121,7 @@ function runSuite(suiteId) {
     clearTimeout(timeout);
     isRunning = false;
     broadcast({ type: 'line', text: `\n[Manta] Failed to start Robot Framework: ${err.message}\n` });
-    broadcast({ type: 'done', exitCode: -1, reportUrl: null, logUrl: null });
+    broadcast({ type: 'done', suiteId, exitCode: -1, reportUrl: null, logUrl: null });
   });
 
   return { started: true };

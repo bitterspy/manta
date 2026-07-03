@@ -96,6 +96,13 @@
       if (message.type === 'done') {
         setAllButtonsDisabled(false);
         liveMarquee.classList.add('hidden');
+        if (message.exitCode === 0) {
+          setSuiteStatus(message.suiteId, 'All tests passed.', 'success');
+        } else if (message.exitCode > 0) {
+          setSuiteStatus(message.suiteId, `${message.exitCode} test(s) failed.`, 'error');
+        } else {
+          setSuiteStatus(message.suiteId, 'Run failed to complete.', 'error');
+        }
         if (message.reportUrl) {
           reportLink.href = message.reportUrl;
           reportLinkWrap.classList.remove('hidden');
