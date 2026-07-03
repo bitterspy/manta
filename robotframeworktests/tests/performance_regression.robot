@@ -5,8 +5,8 @@ Documentation     Manta — performance/regression test suite for BLE Audio conn
 ...               flow: repeated interference recovery and stream
 ...               stability under sustained use. It is a software
 ...               simulation — it does NOT test any real, physical device.
-Resource          ../resources/keywords/ble_keywords.robot
-Variables         ../resources/variables/variables.yaml
+Resource          ../keywords/ble_keywords.robot
+Variables         ../variables/variables.yaml
 
 
 *** Test Cases ***

@@ -6,8 +6,8 @@ Documentation     Manta — mock/demo test suite for BLE Audio connectivity.
 ...               real, physical device — there is no access to any
 ...               specific vendor's hardware or SDK. All BLE logic is
 ...               mocked in BluetoothMockLibrary.py.
-Resource          ../resources/keywords/ble_keywords.robot
-Variables         ../resources/variables/variables.yaml
+Resource          ../keywords/ble_keywords.robot
+Variables         ../variables/variables.yaml
 
 
 *** Test Cases ***

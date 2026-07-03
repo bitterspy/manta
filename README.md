@@ -44,10 +44,10 @@ Manta/
 │   │   ├── ble_audio.robot                  Core connectivity suite
 │   │   ├── connectivity_negative.robot      Negative-path suite
 │   │   └── performance_regression.robot     Performance/regression suite
-│   └── resources/
-│       ├── keywords/ble_keywords.robot  High-level keywords
-│       ├── libraries/BluetoothMockLibrary.py  Mock BLE device
-│       └── variables/variables.yaml     Test constants
+│   ├── keywords/ble_keywords.robot      High-level keywords
+│   ├── libraries/BluetoothMockLibrary.py  Mock BLE device
+│   ├── variables/variables.yaml         Test constants
+│   └── resources/                       Extra assets (scripts, images, etc.)
 ├── Logs/                Generated Robot Framework reports (gitignored)
 └── requirements.txt      Python dependencies
 ```

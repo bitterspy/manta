@@ -15,8 +15,11 @@ const { runSuite, listSuites, registerClient, isRunning } = require('./runner');
 const PORT = process.env.PORT || 44591;
 const FRONTEND_DIR = path.join(__dirname, '..', 'frontend');
 const LOGS_DIR = path.join(__dirname, '..', 'Logs');
-const RF_TESTS_DIR = path.join(__dirname, '..', 'robotframeworktests', 'tests');
-const RF_RESOURCES_DIR = path.join(__dirname, '..', 'robotframeworktests', 'resources');
+const RF_ROOT_DIR = path.join(__dirname, '..', 'robotframeworktests');
+const RF_TESTS_DIR = path.join(RF_ROOT_DIR, 'tests');
+const RF_KEYWORDS_DIR = path.join(RF_ROOT_DIR, 'keywords');
+const RF_LIBRARIES_DIR = path.join(RF_ROOT_DIR, 'libraries');
+const RF_VARIABLES_DIR = path.join(RF_ROOT_DIR, 'variables');
 
 // Whitelisted source files exposed in the "Code" tab — never expose an
 // arbitrary path from user input.
@@ -24,9 +27,9 @@ const SOURCE_FILES = {
   'ble_audio.robot': path.join(RF_TESTS_DIR, 'ble_audio.robot'),
   'connectivity_negative.robot': path.join(RF_TESTS_DIR, 'connectivity_negative.robot'),
   'performance_regression.robot': path.join(RF_TESTS_DIR, 'performance_regression.robot'),
-  'ble_keywords.robot': path.join(RF_RESOURCES_DIR, 'keywords', 'ble_keywords.robot'),
-  'BluetoothMockLibrary.py': path.join(RF_RESOURCES_DIR, 'libraries', 'BluetoothMockLibrary.py'),
-  'variables.yaml': path.join(RF_RESOURCES_DIR, 'variables', 'variables.yaml')
+  'ble_keywords.robot': path.join(RF_KEYWORDS_DIR, 'ble_keywords.robot'),
+  'BluetoothMockLibrary.py': path.join(RF_LIBRARIES_DIR, 'BluetoothMockLibrary.py'),
+  'variables.yaml': path.join(RF_VARIABLES_DIR, 'variables.yaml')
 };
 
 const app = express();
