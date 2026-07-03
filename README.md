@@ -13,7 +13,7 @@ hardware — all Bluetooth behavior is fully simulated in software.
 
 1. A visitor clicks **Run Tests** on the site.
 2. The backend spawns Robot Framework as a subprocess against the test suite
-   in `tests/`.
+   in `robotframeworktests/tests/`.
 3. Its stdout/stderr is streamed live to the browser over a WebSocket
    connection.
 4. Once the run finishes, the generated `report.html` / `log.html` (native
@@ -37,8 +37,9 @@ hardware — all Bluetooth behavior is fully simulated in software.
 Manta/
 ├── backend/            Express + WebSocket server
 ├── frontend/            Static site (Demo / Code tabs)
-├── tests/
-│   ├── ble_audio.robot                  Test suite
+├── robotframeworktests/
+│   ├── tests/
+│   │   └── ble_audio.robot              Test suite
 │   └── resources/
 │       ├── keywords/ble_keywords.robot  High-level keywords
 │       ├── libraries/BluetoothMockLibrary.py  Mock BLE device

@@ -6,9 +6,9 @@ const { spawn } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const TESTS_DIR = path.join(__dirname, '..', 'tests');
+const SUITE_DIR = path.join(__dirname, '..', 'robotframeworktests', 'tests');
 const LOGS_DIR = path.join(__dirname, '..', 'Logs');
-const SUITE_FILE = path.join(TESTS_DIR, 'ble_audio.robot');
+const SUITE_FILE = path.join(SUITE_DIR, 'ble_audio.robot');
 const PROCESS_TIMEOUT_MS = 90 * 1000;
 
 // Robot Framework is installed in a project-local virtualenv (created with
@@ -48,7 +48,7 @@ function runTests() {
   const child = spawn(
     ROBOT_BIN,
     ['--outputdir', LOGS_DIR, SUITE_FILE],
-    { cwd: TESTS_DIR }
+    { cwd: SUITE_DIR }
   );
 
   const timeout = setTimeout(() => {
