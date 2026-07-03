@@ -4,11 +4,21 @@
 
 const { spawn } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 const TESTS_DIR = path.join(__dirname, '..', 'tests');
 const LOGS_DIR = path.join(__dirname, '..', 'Logs');
 const SUITE_FILE = path.join(TESTS_DIR, 'ble_audio.robot');
 const PROCESS_TIMEOUT_MS = 90 * 1000;
+
+// Robot Framework is installed in a project-local virtualenv (created with
+// `python3 -m venv venv`) rather than system-wide, since the server's
+// Python install is externally managed (PEP 668). Fall back to the plain
+// "robot" command for local development where a venv may not be used.
+const ROBOT_BIN = (() => {
+  const venvRobot = path.join(__dirname, '..', 'venv', 'bin', 'robot');
+  return fs.existsSync(venvRobot) ? venvRobot : 'robot';
+})();
 
 let isRunning = false;
 let clients = new Set();
@@ -36,7 +46,7 @@ function runTests() {
   broadcast({ type: 'start' });
 
   const child = spawn(
-    'robot',
+    ROBOT_BIN,
     ['--outputdir', LOGS_DIR, SUITE_FILE],
     { cwd: TESTS_DIR }
   );
