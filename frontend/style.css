@@ -557,6 +557,7 @@ h1 {
   gap: 3px;
   padding: 4px 10px;
   border-radius: 999px;
+  min-width: 72px;
 }
 
 .cv-skill-bars {
