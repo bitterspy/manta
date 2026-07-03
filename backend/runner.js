@@ -26,6 +26,10 @@ const SUITES = {
   'performance_regression': {
     label: 'Performance & Regression',
     file: path.join(SUITE_DIR, 'performance_regression.robot')
+  },
+  'hearing_aid_specific': {
+    label: 'Hearing-Aid-Specific',
+    file: path.join(SUITE_DIR, 'hearing_aid_specific.robot')
   }
 };
 

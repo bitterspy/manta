@@ -24,6 +24,11 @@ class BluetoothMockLibrary:
         self.battery_level_percent: int = 100
         self.power_save_mode: bool = False
         self.reconnect_attempts: int = 0
+        self.left_ear_setting: Optional[str] = None
+        self.right_ear_setting: Optional[str] = None
+        self.right_ear_connected: bool = True
+        self.joined_broadcast: Optional[str] = None
+        self.fitting_mode_active: bool = False
 
     def randomly_fail(self, fail_chance_percent: int) -> bool:
         """Randomly reports a failure with the given probability.
@@ -205,3 +210,142 @@ class BluetoothMockLibrary:
             if self.connected_device is not None:
                 stable_samples += 1
         return stable_samples
+
+    def measure_round_trip_latency_ms(self, codec_quality: str) -> int:
+        """Simulates measuring end-to-end audio latency for a given codec.
+
+        End-to-end latency is the total time from a sound entering the
+        phone's microphone/output to it reaching the wearer's ear through
+        the hearing aid's speaker. Unlike regular headphones, a hearing
+        aid wearer also hears live, un-delayed sound directly through/
+        around the device, so this delayed copy must stay under a tight
+        budget or the two copies audibly clash (comb filtering / an
+        echo-like, "metallic" sound on speech).
+
+        Args:
+            codec_quality: simulated codec/connection quality — one of
+                "optimal", "degraded" (higher-latency fallback codec or
+                weak radio link).
+
+        Returns:
+            int: simulated round-trip latency in milliseconds.
+        """
+        time.sleep(0.5)
+        return 18 if codec_quality == "optimal" else 45
+
+    def set_ear_setting(self, ear: str, setting: str) -> None:
+        """Simulates changing a program/volume setting on one ear.
+
+        Args:
+            ear: which device the change originates from, "left" or "right".
+            setting: the new setting value (e.g. a program name or volume level).
+        """
+        time.sleep(0.3)
+        if ear == "left":
+            self.left_ear_setting = setting
+        else:
+            self.right_ear_setting = setting
+
+    def sync_ear_to_ear(self) -> str:
+        """Simulates propagating the most recent setting to the other ear.
+
+        Paired hearing aids must apply a volume/program change on both
+        ears together, near-instantly — otherwise the wearer briefly
+        hears an asymmetric (louder/quieter, or different program) mix
+        between their two ears, which is disorienting.
+
+        Returns:
+            str: "SYNCED" if both ears now match and the right ear is
+                connected, "DEGRADED_MONO" if the right ear is
+                disconnected and could not receive the sync.
+        """
+        time.sleep(0.2)
+        if not self.right_ear_connected:
+            return "DEGRADED_MONO"
+        self.right_ear_setting = self.left_ear_setting
+        return "SYNCED"
+
+    def disconnect_right_ear(self) -> None:
+        """Simulates the right-ear device losing its connection."""
+        time.sleep(0.2)
+        self.right_ear_connected = False
+
+    def join_broadcast_stream(self, broadcast_name: str, should_succeed: bool = True) -> str:
+        """Simulates joining a public Auracast broadcast audio stream.
+
+        Auracast (part of Bluetooth LE Audio) lets a hearing aid tune
+        into a public one-to-many audio broadcast, like a radio — e.g.
+        an announcement system at an airport or a TV feed in a public
+        space — without pairing 1:1 with the source, unlike a normal
+        phone connection.
+
+        Args:
+            broadcast_name: name/identifier of the broadcast to join.
+            should_succeed: whether the join should succeed — used to
+                simulate a broadcast that is out of range or encrypted
+                without the right broadcast code.
+
+        Returns:
+            str: "BROADCAST_JOINED" or "BROADCAST_JOIN_FAILED".
+        """
+        time.sleep(0.8)
+        if not should_succeed:
+            self.joined_broadcast = None
+            return "BROADCAST_JOIN_FAILED"
+        self.joined_broadcast = broadcast_name
+        return "BROADCAST_JOINED"
+
+    def simulate_broadcast_signal_loss(self) -> str:
+        """Simulates losing the currently joined Auracast broadcast signal.
+
+        This is a different failure mode than losing a normal phone
+        pairing: there is no single source to "reconnect" to — the
+        device must either re-scan for the same broadcast or fall back
+        to its last unicast (phone) connection.
+
+        Returns:
+            str: "BROADCAST_LOST".
+        """
+        time.sleep(0.3)
+        self.joined_broadcast = None
+        return "BROADCAST_LOST"
+
+    def enter_fitting_mode(self, requested_by: str) -> str:
+        """Simulates a clinician's fitting software opening a privileged session.
+
+        A hearing aid exposes two different BLE access levels: a
+        consumer app (volume, program switching) and a clinical fitting
+        tool used by an audiologist to write audiogram-derived gain
+        settings. These must be kept separate so a consumer app can
+        never accidentally (or maliciously) rewrite clinical settings.
+
+        Args:
+            requested_by: who is requesting the session, "clinician_tool"
+                or "consumer_app".
+
+        Returns:
+            str: "FITTING_MODE_ACTIVE" if requested by the clinician
+                tool, "ACCESS_DENIED" otherwise.
+        """
+        time.sleep(0.4)
+        if requested_by != "clinician_tool":
+            return "ACCESS_DENIED"
+        self.fitting_mode_active = True
+        return "FITTING_MODE_ACTIVE"
+
+    def write_clinical_setting(self, requested_by: str) -> str:
+        """Simulates writing a clinical (audiogram-derived) setting over BLE.
+
+        Args:
+            requested_by: who is attempting the write, "clinician_tool"
+                or "consumer_app".
+
+        Returns:
+            str: "WRITE_ACCEPTED" if fitting mode is active and the
+                request comes from the clinician tool, "WRITE_REJECTED"
+                otherwise.
+        """
+        time.sleep(0.3)
+        if self.fitting_mode_active and requested_by == "clinician_tool":
+            return "WRITE_ACCEPTED"
+        return "WRITE_REJECTED"

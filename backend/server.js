@@ -28,6 +28,7 @@ const SOURCE_FILES = {
   'ble_audio.robot': path.join(RF_TESTS_DIR, 'ble_audio.robot'),
   'connectivity_negative.robot': path.join(RF_TESTS_DIR, 'connectivity_negative.robot'),
   'performance_regression.robot': path.join(RF_TESTS_DIR, 'performance_regression.robot'),
+  'hearing_aid_specific.robot': path.join(RF_TESTS_DIR, 'hearing_aid_specific.robot'),
   'ble_keywords.robot': path.join(RF_KEYWORDS_DIR, 'ble_keywords.robot'),
   'BluetoothMockLibrary.py': path.join(RF_LIBRARIES_DIR, 'BluetoothMockLibrary.py'),
   'variables.yaml': path.join(RF_VARIABLES_DIR, 'variables.yaml')

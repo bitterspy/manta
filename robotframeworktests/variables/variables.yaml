@@ -40,3 +40,21 @@ STREAM_STABILITY_SAMPLE_COUNT: 5
 
 # FLAKY_FAIL_CHANCE_PERCENT (int) - probability (0-100) that a test tagged as flaky-eligible randomly fails, to simulate real-world CI flakiness
 FLAKY_FAIL_CHANCE_PERCENT: 20
+
+# MAX_LATENCY_BUDGET_MS (int) - maximum acceptable round-trip audio latency, in milliseconds, before comb filtering becomes audible against live sound
+MAX_LATENCY_BUDGET_MS: 20
+
+# DEGRADED_CODEC_QUALITY (str) - simulated codec/link quality label representing a higher-latency fallback (e.g. weak radio link or fallback codec)
+DEGRADED_CODEC_QUALITY: "degraded"
+
+# OPTIMAL_CODEC_QUALITY (str) - simulated codec/link quality label representing the best-case, lowest-latency codec/link
+OPTIMAL_CODEC_QUALITY: "optimal"
+
+# BROADCAST_NAME (str) - name of the simulated public Auracast broadcast stream used in broadcast tests
+BROADCAST_NAME: "Gate 14 Announcements"
+
+# CLINICIAN_TOOL_IDENTITY (str) - identity string representing the privileged clinical fitting software
+CLINICIAN_TOOL_IDENTITY: "clinician_tool"
+
+# CONSUMER_APP_IDENTITY (str) - identity string representing the regular consumer companion app
+CONSUMER_APP_IDENTITY: "consumer_app"
