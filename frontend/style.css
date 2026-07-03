@@ -546,32 +546,23 @@ h1 {
   white-space: nowrap;
 }
 
-.cv-skill-levels {
+.cv-tag-leveled {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-}
-
-.cv-skill-level {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.cv-skill-name {
-  font-size: 0.85rem;
-  color: var(--text);
-  min-width: 130px;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 10px;
 }
 
 .cv-skill-bars {
   display: flex;
-  gap: 4px;
+  gap: 3px;
 }
 
 .cv-skill-bar {
-  width: 16px;
-  height: 8px;
+  width: 12px;
+  height: 6px;
   border-radius: 2px;
   background: var(--border);
 }
