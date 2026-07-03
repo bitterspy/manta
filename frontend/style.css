@@ -172,7 +172,9 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 1px;
+  flex: 1 1 auto;
   min-width: 0;
+  overflow: hidden;
 }
 
 .suite-label {
@@ -181,6 +183,9 @@ h1 {
 }
 
 .suite-status {
+  display: block;
+  width: 100%;
+  max-width: 100%;
   color: var(--text-muted);
   font-size: 0.75rem;
   min-height: 1.1em;
