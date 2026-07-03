@@ -11,6 +11,7 @@
       tabButtons.forEach((b) => b.classList.remove('active'));
       tabPanels.forEach((p) => p.classList.remove('active'));
       button.classList.add('active');
+      button.classList.remove('tab-button-pulse');
       document.getElementById(`tab-${button.dataset.tab}`).classList.add('active');
     });
   });

@@ -95,6 +95,27 @@ body {
   color: #fff;
 }
 
+.tab-button-pulse {
+  color: #fff;
+  font-weight: 700;
+  animation: tab-pulse 1.8s ease-in-out infinite;
+}
+
+.tab-button-pulse.active {
+  animation: none;
+}
+
+@keyframes tab-pulse {
+  0%, 100% {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35);
+  }
+  50% {
+    background: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 0 0 6px rgba(255, 255, 255, 0);
+  }
+}
+
 .github-link {
   color: #fff;
   text-decoration: none;
