@@ -552,7 +552,7 @@ h1 {
   border: 2px solid transparent;
   background:
     linear-gradient(var(--bg), var(--bg)) padding-box,
-    conic-gradient(#2f8f5b var(--pct), var(--border) 0) border-box;
+    conic-gradient(from 225deg, #2f8f5b calc(-1 * var(--pct)), var(--border) 0) border-box;
 }
 
 .cv-tag-leveled {
