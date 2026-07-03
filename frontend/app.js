@@ -19,6 +19,7 @@
   const liveLog = document.getElementById('live-log');
   const reportLinkWrap = document.getElementById('report-link-wrap');
   const reportLink = document.getElementById('report-link');
+  const liveMarquee = document.getElementById('live-marquee');
 
   let runButtons = [];
 
@@ -84,6 +85,7 @@
         reportLinkWrap.classList.add('hidden');
         setAllButtonsDisabled(true);
         setSuiteStatus(message.suiteId, 'Running...', '');
+        liveMarquee.classList.remove('hidden');
       }
 
       if (message.type === 'line') {
@@ -93,6 +95,7 @@
 
       if (message.type === 'done') {
         setAllButtonsDisabled(false);
+        liveMarquee.classList.add('hidden');
         if (message.reportUrl) {
           reportLink.href = message.reportUrl;
           reportLinkWrap.classList.remove('hidden');
