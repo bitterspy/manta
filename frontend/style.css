@@ -573,10 +573,6 @@ h1 {
   stroke: #2f8f5b;
   stroke-width: 2;
   stroke-linecap: round;
-  /* Rotate so the stroke starts at the bottom-left of the pill, and
-     mirror horizontally so it fills counter-clockwise from there. */
-  transform: scaleX(-1) rotate(135deg);
-  transform-origin: center;
   transition: stroke-dashoffset 0.3s ease;
 }
 
