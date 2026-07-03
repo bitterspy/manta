@@ -11,6 +11,7 @@ const fs = require('fs');
 const http = require('http');
 const WebSocket = require('ws');
 const { runSuite, listSuites, registerClient, isRunning } = require('./runner');
+const { buildKeywordIndex } = require('./keywordIndex');
 
 const PORT = process.env.PORT || 44591;
 const FRONTEND_DIR = path.join(__dirname, '..', 'frontend');
@@ -75,6 +76,18 @@ app.get('/api/source/:filename', (req, res) => {
     }
     res.type('text/plain').send(content);
   });
+});
+
+// Maps keyword names to their definition site (file + line), so the
+// "Code" tab can offer IDE-style "go to definition" links. Rebuilt on
+// every request rather than cached, since these are small local files
+// and it keeps the index trivially correct after any edit/redeploy.
+app.get('/api/keyword-index', (req, res) => {
+  try {
+    res.json(buildKeywordIndex(SOURCE_FILES));
+  } catch (err) {
+    res.status(500).json({ error: 'Could not build keyword index.' });
+  }
 });
 
 const server = http.createServer(app);

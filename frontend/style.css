@@ -251,16 +251,28 @@ h1 {
 }
 
 .report-button {
-  color: var(--brand);
+  display: inline-block;
+  color: #fff;
+  background: var(--text-muted);
   font-weight: 600;
   font-size: 0.8rem;
   text-decoration: none;
   white-space: nowrap;
   flex-shrink: 0;
+  padding: 7px 14px;
+  border-radius: 6px;
 }
 
 .report-button:hover {
-  text-decoration: underline;
+  filter: brightness(1.1);
+}
+
+.report-button.success {
+  background: var(--success);
+}
+
+.report-button.error {
+  background: var(--error);
 }
 
 .report-button.hidden {
@@ -346,6 +358,33 @@ h1 {
   overflow: auto;
   max-height: 600px;
   margin: 0;
+}
+
+.code-line {
+  display: inline-block;
+  width: 100%;
+}
+
+.code-line.highlighted-line {
+  background: rgba(136, 180, 201, 0.2);
+  outline: 1px solid rgba(136, 180, 201, 0.4);
+}
+
+.keyword-link {
+  color: #7fc8e0;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  cursor: pointer;
+}
+
+.keyword-link:hover {
+  color: #b7e3f2;
+}
+
+.keyword-link-self {
+  color: #d7e3ea;
+  text-decoration: none;
+  cursor: default;
 }
 
 .site-footer {

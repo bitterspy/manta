@@ -45,16 +45,18 @@
     statusEl.innerHTML = `<span class="suite-status-track">${LIVE_DEMO_TEXT.repeat(3)}</span>`;
   }
 
-  function hideReportButton(suiteId) {
-    const reportButton = document.querySelector(`.report-button[data-suite="${suiteId}"]`);
-    if (reportButton) reportButton.classList.add('hidden');
+  function hideAllReportButtons() {
+    document.querySelectorAll('.report-button').forEach((button) => {
+      button.classList.add('hidden');
+    });
   }
 
-  function showReportButton(suiteId, reportUrl) {
+  function showReportButton(suiteId, reportUrl, passed) {
     const reportButton = document.querySelector(`.report-button[data-suite="${suiteId}"]`);
     if (!reportButton) return;
     reportButton.href = reportUrl;
-    reportButton.classList.remove('hidden');
+    reportButton.classList.remove('hidden', 'success', 'error');
+    reportButton.classList.add(passed ? 'success' : 'error');
   }
 
   async function loadSuites() {
@@ -107,7 +109,7 @@
       if (message.type === 'start') {
         const command = message.fileName ? `robot ${message.fileName}` : 'robot';
         liveLogOutput.textContent = `${PROMPT} ${command}\n`;
-        hideReportButton(message.suiteId);
+        hideAllReportButtons();
         setAllButtonsDisabled(true);
         setSuiteRunning(message.suiteId);
       }
@@ -127,7 +129,7 @@
           setSuiteStatus(message.suiteId, 'Run failed to complete.', 'error');
         }
         if (message.reportUrl) {
-          showReportButton(message.suiteId, message.reportUrl);
+          showReportButton(message.suiteId, message.reportUrl, message.exitCode === 0);
         }
       }
     });
@@ -143,12 +145,81 @@
   const fileButtons = document.querySelectorAll('.file-button');
   const codeContent = document.getElementById('code-content');
 
-  async function loadFile(filename) {
+  let keywordIndex = {};
+
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  // Turns any occurrence of a known keyword name in a line of source code
+  // into a clickable span that jumps to that keyword's definition, like
+  // "go to definition" in an IDE. Only recognizes this project's own
+  // keywords (from keywordIndex), not Robot Framework's built-ins.
+  function linkifyLine(line, currentFilename) {
+    const names = Object.keys(keywordIndex).sort((a, b) => b.length - a.length);
+    if (names.length === 0) return escapeHtml(line);
+
+    const pattern = new RegExp(`(${names.map((n) => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'g');
+    const parts = line.split(pattern);
+
+    return parts
+      .map((part) => {
+        const target = keywordIndex[part];
+        if (!target) return escapeHtml(part);
+        const isSelfDefinition = target.file === currentFilename;
+        const cls = isSelfDefinition ? 'keyword-link keyword-link-self' : 'keyword-link';
+        return `<span class="${cls}" data-target-file="${target.file}" data-target-line="${target.line}">${escapeHtml(part)}</span>`;
+      })
+      .join('');
+  }
+
+  function renderCode(filename, text) {
+    const lines = text.split('\n');
+    codeContent.innerHTML = lines
+      .map((line, i) => `<span class="code-line" data-line="${i + 1}">${linkifyLine(line, filename)}</span>`)
+      .join('\n');
+  }
+
+  function jumpToDefinition(filename, lineNumber) {
+    const targetButton = document.querySelector(`.file-button[data-file="${filename}"]`);
+    if (targetButton) {
+      fileButtons.forEach((b) => b.classList.remove('active'));
+      targetButton.classList.add('active');
+    }
+    loadFile(filename, lineNumber);
+  }
+
+  async function loadFile(filename, highlightLine) {
     codeContent.textContent = 'Loading...';
     try {
+      if (Object.keys(keywordIndex).length === 0) {
+        const indexRes = await fetch('/api/keyword-index');
+        keywordIndex = await indexRes.json();
+      }
       const res = await fetch(`/api/source/${encodeURIComponent(filename)}`);
       const text = await res.text();
-      codeContent.textContent = res.ok ? text : `Error: ${text}`;
+      if (!res.ok) {
+        codeContent.textContent = `Error: ${text}`;
+        return;
+      }
+      renderCode(filename, text);
+
+      codeContent.querySelectorAll('.keyword-link').forEach((el) => {
+        el.addEventListener('click', () => {
+          jumpToDefinition(el.dataset.targetFile, parseInt(el.dataset.targetLine, 10));
+        });
+      });
+
+      if (highlightLine) {
+        const lineEl = codeContent.querySelector(`.code-line[data-line="${highlightLine}"]`);
+        if (lineEl) {
+          lineEl.classList.add('highlighted-line');
+          lineEl.scrollIntoView({ block: 'center' });
+        }
+      }
     } catch (err) {
       codeContent.textContent = 'Network error while loading file.';
     }
