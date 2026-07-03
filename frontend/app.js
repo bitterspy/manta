@@ -18,12 +18,23 @@
   const suiteList = document.getElementById('suite-list');
   const liveLog = document.getElementById('live-log');
   const liveLogOutput = document.getElementById('live-log-output');
+  const liveLogInput = document.getElementById('live-log-input');
 
   const PROMPT = 'manta@demo:~$';
 
   const LIVE_DEMO_TEXT = '&#9679; LIVE DEMO — real Robot Framework tests running on a simulated device &#9679; ';
 
   let runButtons = [];
+  let suites = [];
+  let inputBuffer = '';
+  let inputLocked = false;
+
+  function printMenu() {
+    const menuLines = suites.map((suite, i) => `  ${i + 1}) ${suite.label}`).join('\n');
+    liveLogOutput.textContent =
+      `Select a suite to run:\n${menuLines}\n\n${PROMPT} `;
+    liveLog.scrollTop = liveLog.scrollHeight;
+  }
 
   function setAllButtonsDisabled(disabled) {
     runButtons.forEach((button) => {
@@ -61,7 +72,7 @@
 
   async function loadSuites() {
     const res = await fetch('/api/suites');
-    const suites = await res.json();
+    suites = await res.json();
 
     suiteList.innerHTML = '';
     suites.forEach((suite) => {
@@ -84,9 +95,12 @@
     runButtons.forEach((button) => {
       button.addEventListener('click', () => startRun(button.dataset.suite));
     });
+
+    printMenu();
   }
 
   async function startRun(suiteId) {
+    if (inputLocked) return;
     setSuiteStatus(suiteId, 'Starting...', '');
     try {
       const res = await fetch(`/api/run/${encodeURIComponent(suiteId)}`, { method: 'POST' });
@@ -108,6 +122,9 @@
 
       if (message.type === 'start') {
         const command = message.fileName ? `robot ${message.fileName}` : 'robot';
+        inputLocked = true;
+        inputBuffer = '';
+        liveLogInput.textContent = '';
         liveLogOutput.textContent = `${PROMPT} ${command}\n`;
         hideAllReportButtons();
         setAllButtonsDisabled(true);
@@ -131,6 +148,8 @@
         if (message.reportUrl) {
           showReportButton(message.suiteId, message.reportUrl, message.exitCode === 0);
         }
+        inputLocked = false;
+        printMenu();
       }
     });
 
@@ -141,6 +160,44 @@
 
   connectWebSocket();
   loadSuites();
+
+  // Interactive terminal input: click into the log, type a suite number
+  // (1-3), press Enter to run it — same startRun() as clicking a Run
+  // button, just triggered from the "terminal" instead.
+  liveLog.addEventListener('click', () => liveLog.focus());
+
+  liveLog.addEventListener('keydown', (event) => {
+    if (inputLocked) return;
+
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const index = parseInt(inputBuffer, 10) - 1;
+      liveLogOutput.textContent += `${inputBuffer}\n`;
+      inputBuffer = '';
+      liveLogInput.textContent = '';
+      const suite = suites[index];
+      if (suite) {
+        startRun(suite.id);
+      } else {
+        liveLogOutput.textContent += `Unknown option. Type a number from 1 to ${suites.length}.\n\n${PROMPT} `;
+      }
+      liveLog.scrollTop = liveLog.scrollHeight;
+      return;
+    }
+
+    if (event.key === 'Backspace') {
+      event.preventDefault();
+      inputBuffer = inputBuffer.slice(0, -1);
+      liveLogInput.textContent = inputBuffer;
+      return;
+    }
+
+    if (/^[0-9]$/.test(event.key) && inputBuffer.length < 1) {
+      event.preventDefault();
+      inputBuffer += event.key;
+      liveLogInput.textContent = inputBuffer;
+    }
+  });
 
   const fileButtons = document.querySelectorAll('.file-button');
   const codeContent = document.getElementById('code-content');

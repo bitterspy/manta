@@ -291,6 +291,17 @@ h1 {
   overflow-y: auto;
   white-space: pre-wrap;
   word-break: break-word;
+  cursor: text;
+  outline: none;
+}
+
+.live-log:focus {
+  box-shadow: 0 0 0 2px var(--brand);
+}
+
+.terminal-input {
+  color: #fff;
+  font-weight: 600;
 }
 
 .terminal-cursor {
