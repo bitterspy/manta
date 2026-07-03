@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Manta — Live Test Automation Demo</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐟</text></svg>" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
 </head>
 <body>
   <div class="bg-scene" aria-hidden="true"></div>
@@ -80,14 +80,32 @@
 
         <section class="cv-section">
           <h2>Skills</h2>
-          <dl class="cv-skills">
-            <dt>Test Automation</dt><dd>Robot Framework, Squish, Postman, Manual Testing</dd>
-            <dt>Programming &amp; Scripting</dt><dd>Python, Bash, PHP, SQL</dd>
-            <dt>Infrastructure &amp; DevOps</dt><dd>Linux, Docker, Kubernetes, Jenkins, Azure DevOps, Git</dd>
-            <dt>Protocols &amp; Systems</dt><dd>OCPP, CAN, OPC, TCP/IP, SSH, Apache, MySQL</dd>
-            <dt>QA Practices &amp; Tools</dt><dd>Agile/Scrum, Log Analysis, Jira, Technical Documentation</dd>
-            <dt>Languages</dt><dd>Polish (Native), English (C1/Fluent)</dd>
-          </dl>
+          <div class="cv-skills">
+            <div class="cv-skill-row">
+              <span class="cv-skill-label">Test Automation</span>
+              <span class="cv-skill-tags"><span class="cv-tag">Robot Framework</span><span class="cv-tag">Squish</span><span class="cv-tag">Postman</span><span class="cv-tag">Manual Testing</span></span>
+            </div>
+            <div class="cv-skill-row">
+              <span class="cv-skill-label">Programming &amp; Scripting</span>
+              <span class="cv-skill-tags"><span class="cv-tag">Python</span><span class="cv-tag">Bash</span><span class="cv-tag">PHP</span><span class="cv-tag">SQL</span></span>
+            </div>
+            <div class="cv-skill-row">
+              <span class="cv-skill-label">Infrastructure &amp; DevOps</span>
+              <span class="cv-skill-tags"><span class="cv-tag">Linux</span><span class="cv-tag">Docker</span><span class="cv-tag">Kubernetes</span><span class="cv-tag">Jenkins</span><span class="cv-tag">Azure DevOps</span><span class="cv-tag">Git</span></span>
+            </div>
+            <div class="cv-skill-row">
+              <span class="cv-skill-label">Protocols &amp; Systems</span>
+              <span class="cv-skill-tags"><span class="cv-tag">OCPP</span><span class="cv-tag">CAN</span><span class="cv-tag">OPC</span><span class="cv-tag">TCP/IP</span><span class="cv-tag">SSH</span><span class="cv-tag">Apache</span><span class="cv-tag">MySQL</span></span>
+            </div>
+            <div class="cv-skill-row">
+              <span class="cv-skill-label">QA Practices &amp; Tools</span>
+              <span class="cv-skill-tags"><span class="cv-tag">Agile/Scrum</span><span class="cv-tag">Log Analysis</span><span class="cv-tag">Jira</span><span class="cv-tag">Technical Documentation</span></span>
+            </div>
+            <div class="cv-skill-row">
+              <span class="cv-skill-label">Languages</span>
+              <span class="cv-skill-tags"><span class="cv-tag">Polish (Native)</span><span class="cv-tag">English (C1/Fluent)</span></span>
+            </div>
+          </div>
         </section>
 
         <section class="cv-section">
@@ -203,6 +221,6 @@
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>
