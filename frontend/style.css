@@ -547,12 +547,12 @@ h1 {
 }
 
 .cv-tag-ring {
-  --pct: 100%;
+  --deg: 360deg;
   position: relative;
   border: 2px solid transparent;
   background:
     linear-gradient(var(--bg), var(--bg)) padding-box,
-    conic-gradient(from 225deg, #2f8f5b calc(-1 * var(--pct)), var(--border) 0) border-box;
+    conic-gradient(from 225deg, #2f8f5b calc(var(--deg) * -1), var(--border) 0deg) border-box;
 }
 
 .cv-tag-leveled {
