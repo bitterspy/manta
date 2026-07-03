@@ -546,6 +546,15 @@ h1 {
   white-space: nowrap;
 }
 
+.cv-tag-ring {
+  --pct: 100%;
+  position: relative;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(var(--bg), var(--bg)) padding-box,
+    conic-gradient(#2f8f5b var(--pct), var(--border) 0) border-box;
+}
+
 .cv-tag-leveled {
   display: flex;
   flex-direction: column;
