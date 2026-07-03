@@ -562,8 +562,8 @@ h1 {
 
 .cv-skill-bar {
   width: 12px;
-  height: 6px;
-  border-radius: 2px;
+  height: 1.5px;
+  border-radius: 1px;
   background: var(--border);
 }
 
