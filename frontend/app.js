@@ -17,8 +17,9 @@
 
   const suiteList = document.getElementById('suite-list');
   const liveLog = document.getElementById('live-log');
-  const reportLinkWrap = document.getElementById('report-link-wrap');
-  const reportLink = document.getElementById('report-link');
+  const liveLogOutput = document.getElementById('live-log-output');
+
+  const PROMPT = 'manta@demo:~$';
 
   const LIVE_DEMO_TEXT = '&#9679; LIVE DEMO — real Robot Framework tests running on a simulated device &#9679; ';
 
@@ -44,6 +45,18 @@
     statusEl.innerHTML = `<span class="suite-status-track">${LIVE_DEMO_TEXT.repeat(3)}</span>`;
   }
 
+  function hideReportButton(suiteId) {
+    const reportButton = document.querySelector(`.report-button[data-suite="${suiteId}"]`);
+    if (reportButton) reportButton.classList.add('hidden');
+  }
+
+  function showReportButton(suiteId, reportUrl) {
+    const reportButton = document.querySelector(`.report-button[data-suite="${suiteId}"]`);
+    if (!reportButton) return;
+    reportButton.href = reportUrl;
+    reportButton.classList.remove('hidden');
+  }
+
   async function loadSuites() {
     const res = await fetch('/api/suites');
     const suites = await res.json();
@@ -57,7 +70,10 @@
           <div class="suite-label">${suite.label}</div>
           <span class="suite-status" data-suite="${suite.id}"></span>
         </div>
-        <button class="run-button" data-suite="${suite.id}">&#9654; Run</button>
+        <div class="suite-actions">
+          <button class="run-button" data-suite="${suite.id}">&#9654; Run</button>
+          <a class="report-button hidden" data-suite="${suite.id}" href="#" target="_blank" rel="noopener">Report &rarr;</a>
+        </div>
       `;
       suiteList.appendChild(card);
     });
@@ -89,14 +105,15 @@
       const message = JSON.parse(event.data);
 
       if (message.type === 'start') {
-        liveLog.textContent = '';
-        reportLinkWrap.classList.add('hidden');
+        const command = message.fileName ? `robot ${message.fileName}` : 'robot';
+        liveLogOutput.textContent = `${PROMPT} ${command}\n`;
+        hideReportButton(message.suiteId);
         setAllButtonsDisabled(true);
         setSuiteRunning(message.suiteId);
       }
 
       if (message.type === 'line') {
-        liveLog.textContent += message.text;
+        liveLogOutput.textContent += message.text;
         liveLog.scrollTop = liveLog.scrollHeight;
       }
 
@@ -110,8 +127,7 @@
           setSuiteStatus(message.suiteId, 'Run failed to complete.', 'error');
         }
         if (message.reportUrl) {
-          reportLink.href = message.reportUrl;
-          reportLinkWrap.classList.remove('hidden');
+          showReportButton(message.suiteId, message.reportUrl);
         }
       }
     });

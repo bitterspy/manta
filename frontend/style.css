@@ -222,6 +222,13 @@ h1 {
   }
 }
 
+.suite-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .run-button {
   background: var(--brand);
   color: #fff;
@@ -243,6 +250,23 @@ h1 {
   cursor: not-allowed;
 }
 
+.report-button {
+  color: var(--brand);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.report-button:hover {
+  text-decoration: underline;
+}
+
+.report-button.hidden {
+  display: none;
+}
+
 .live-log {
   background: #0f171d;
   color: #d7e3ea;
@@ -257,22 +281,22 @@ h1 {
   word-break: break-word;
 }
 
-.report-link-wrap {
-  margin-top: 16px;
+.terminal-cursor {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  background: #d7e3ea;
+  vertical-align: text-bottom;
+  animation: cursor-blink 1s step-end infinite;
 }
 
-.report-link-wrap.hidden {
-  display: none;
-}
-
-.report-link {
-  color: var(--brand);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.report-link:hover {
-  text-decoration: underline;
+@keyframes cursor-blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  50.01%, 100% {
+    opacity: 0;
+  }
 }
 
 .code-layout {

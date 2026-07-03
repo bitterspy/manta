@@ -70,7 +70,7 @@ function runSuite(suiteId) {
   }
 
   isRunning = true;
-  broadcast({ type: 'start', suiteId, label: suite.label });
+  broadcast({ type: 'start', suiteId, label: suite.label, fileName: path.basename(suite.file) });
 
   // Robot Framework's own --console verbose only prints a summary per test
   // case, not per keyword. LiveConsoleListener hooks into the real
